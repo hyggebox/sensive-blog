@@ -39,7 +39,6 @@ def fetch_with_comments_num(posts):
 
 def index(request):
     most_popular_posts = Post.objects.popular().prefetch_related('author')[:5]
-
     fetch_with_comments_num(most_popular_posts)
 
     fresh_posts = Post.objects.prefetch_related('author').order_by('-published_at')[:5]
@@ -59,7 +58,7 @@ def index(request):
 
 def post_detail(request, slug):
     post = Post.objects.get(slug=slug)
-    comments = Comment.objects.filter(post=post)
+    comments = post.comments.all()
     serialized_comments = []
     for comment in comments:
         serialized_comments.append({
