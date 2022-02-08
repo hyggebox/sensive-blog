@@ -21,7 +21,14 @@ def serialize_post(post):
 def serialize_tag(tag):
     return {
         'title': tag.title,
-        'posts_with_tag': tag.num_comments,
+        'posts_with_tag': tag.num_posts,
+    }
+
+
+def serialize_tag_optimized(tag):
+    return {
+        'title': tag.title,
+        'posts_with_tag': tag.num_posts,
     }
 
 
@@ -45,7 +52,7 @@ def fetch_with_posts_num(tags):
     ids_and_posts = tags_with_posts.values_list('id', 'num_posts')
     count_for_id = dict(ids_and_posts)
     for tag in tags:
-        tag.num_comments = count_for_id[tag.id]
+        tag.num_posts = count_for_id[tag.id]
     return tags
 
 
@@ -66,7 +73,7 @@ def index(request):
             serialize_post(post) for post in most_popular_posts
         ],
         'page_posts': [serialize_post(post) for post in fresh_posts],
-        'popular_tags': [serialize_tag(tag) for tag in most_popular_tags],
+        'popular_tags': [serialize_tag_optimized(tag) for tag in most_popular_tags],
     }
     return render(request, 'index.html', context)
 
