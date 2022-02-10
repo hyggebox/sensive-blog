@@ -53,12 +53,16 @@ def fetch_with_comments_num(posts):
 def index(request):
     most_popular_posts = Post.objects.popular().prefetch_related(
         Prefetch('author'),
-        Prefetch('tags', queryset=Tag.objects.popular(), to_attr='ordered_tags'))[:5]
+        Prefetch('tags',
+                 queryset=Tag.objects.popular(),
+                 to_attr='ordered_tags'))[:5]
     fetch_with_comments_num(most_popular_posts)
 
     fresh_posts = Post.objects.prefetch_related(
         Prefetch('author'),
-        Prefetch('tags', queryset=Tag.objects.popular(), to_attr='ordered_tags')).order_by('-published_at')[:5]
+        Prefetch('tags',
+                 queryset=Tag.objects.popular(),
+                 to_attr='ordered_tags')).order_by('-published_at')[:5]
     fetch_with_comments_num(fresh_posts)
 
     most_popular_tags = Tag.objects.popular()[:5]
